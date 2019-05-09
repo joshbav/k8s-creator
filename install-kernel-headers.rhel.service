@@ -1,0 +1,30 @@
+# Revision 1-11-19, tested on CentOS 7.5
+# This is a custom onshot (doesn't stay running) systemd unit that is ran on startup, 
+#  it installs the kernel headers. 
+# This allows for a kernel upgrade to happen, then when it reboots after, this 
+#  oneshot systemd unit is ran the matching kernel headers are installed.
+#
+[Unit]
+Description=Installs & updates kernel headers automatically (by Sysdig)
+Documentation=
+Requires=network-online.target
+After=network-online.target
+Before=dragent.service
+
+[Service]
+Type=oneshot
+# Don't keep unit running after the commands have been executed
+RemainAfterExit=false
+StandardOutput=journal+console
+StandardError=journal+console
+EnvironmentFile=
+# Note systemd starts executables as root by default, thus no use of sudo below,
+# and full paths are required
+ExecStartPre=
+# This package redirects to the proper version, thus an install will do an upgrade
+ExecStart=/usr/bin/bash -c "/usr/bin/yum install -y kernel-headers"
+# Note ExecStopPost entries are ran regardless of the outcome of ExecStartPre and ExecStart commands
+ExecStopPost=
+
+[Install]
+WantedBy=multi-user.target
