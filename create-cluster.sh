@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # TODO:
-# release eip's by allocation id
+# BUG: release elastic ip's by allocation id
 # rename private key to .key  no -priv
 # check for private key before starting
 # kube_version  not working? how to do 1.14
@@ -16,8 +16,6 @@
 #helm_enabled: true
 # preinstall_selinux_state = disabled per https://github.com/kubernetes-sigs/kubespray/blob/master/docs/vars.md
 #   
-# k8s 1.14 in progress
-# reboot nodes in userdata
 
 # FOR CREATING K8S CLUSTERS IN IN AWS WITH KUBESPRAY
 # REVISION 4-15-19
@@ -28,19 +26,18 @@
 MY_EMAIL=name@domain.com                    # Will be used in AWS tags
 #AWS_SSH_KEY=/users/josh/joshb.pem          # Must be absolute path, don't use ~
 # NOTE, USING CLASS KEY CREATED BY CREATE-VPC.SH
-AWS_SSH_KEY=class-key-priv.key
+AWS_SSH_KEY=class-key-priv.key              # Best if you don't modify
 SSH_USER_LOGIN=centos                       # Don't modify
 
 MASTER_NODE_COUNT=1                         # Must be 1 or 3. Master #1 gets an Elastic IP
-PUBLIC_NODE_COUNT=1 #CHANGED                        # Must be >0. Public nodes are just workers with an extra label
+PUBLIC_NODE_COUNT=1                         # Must be >0. Public nodes are just workers with an extra label
                                             #   Public node #1 gets an Elastic IP
-WORKER_NODE_COUNT=2 #CHANGED                         # Can be 0-any. For a 2 node cluster have 1 master and 1 public node
+WORKER_NODE_COUNT=1                         # Can be 0-any. For a 2 node cluster have 1 master and 1 public node
 
 # TODO ENABLE, IS CURRENTLY HARD CODED
 SHUTDOWN_TIMER_HOURS=12                      # How long instances will run before powering off (not terminating)
 # TODO ENABLE THESE 2, IS HARD CODED
-
-NODE_DISK_SIZE=120      #CHANGED                     # Size in GB for EBS volume for each node, same for master & worker
+NODE_DISK_SIZE=120                          # Size in GB for EBS volume for each node, same for master & worker
 K8S_NODE_NAME_PREFIX=k8s                    # Don't modify. Used by this script, not kubespray
 
 K8S_VERSION=v1.14.0
